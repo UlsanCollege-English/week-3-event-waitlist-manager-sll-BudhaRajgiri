@@ -1,38 +1,41 @@
-
-### `/src/waitlist.py` (starter)
-
-class _Node:
-    __slots__ = ("name", "next")
-    def __init__(self, name, next=None):
-        self.name = name
-        self.next = next
+# src/waitlist.py
 
 class Waitlist:
     def __init__(self):
-        self.head = None
-        self.tail = None
-        self._size = 0
+        self._queue = []
 
-    def __len__(self):
-        """Return number of people on the waitlist."""
-        ...
+    def join(self, name: str):
+        """Add a name to the waitlist."""
+        self._queue.append(name)
 
     def to_list(self):
-        """Return names from head to tail as a Python list."""
-        ...
+        """Return the current waitlist as a list."""
+        return list(self._queue)
 
-    def join(self, name):
-        """Append name at the tail (O(1))."""
-        ...
+    def __len__(self):
+        """Return the number of people in the waitlist."""
+        return len(self._queue)
 
-    def find(self, name):
-        """Return True if name exists, else False."""
-        ...
+    def find(self, name: str) -> bool:
+        """Check if a name exists in the waitlist."""
+        return name in self._queue
 
-    def cancel(self, name):
-        """Remove first occurrence; return True if removed."""
-        ...
+    def cancel(self, name: str) -> bool:
+        """Cancel the first occurrence of a name from the waitlist.
+        Returns True if removed, False if not found.
+        """
+        try:
+            self._queue.remove(name)
+            return True
+        except ValueError:
+            return False
 
-    def bump(self, name):
-        """Move first occurrence to the head; return True if moved."""
-
+    def bump(self, name: str) -> bool:
+        """Move a name to the front of the waitlist.
+        Returns True if successful, False if not found.
+        """
+        if name in self._queue:
+            self._queue.remove(name)
+            self._queue.insert(0, name)
+            return True
+        return False
